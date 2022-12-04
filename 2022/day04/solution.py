@@ -1,17 +1,29 @@
 # programming challenge from https://adventofcode.com/2022/day/4
 
 
-def parse_file(filename: str):
+import os
+import typing
+
+
+def read_file(filename:str) -> str:
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(dir_path, filename)
     try:
-        with open(filename) as file:
-            lines = [line.strip().split(',') for line in file.readlines()]
+        with open(file_path) as file:
+            data = file.read()
     except FileNotFoundError:
-        raise FileNotFoundError(f"{filename} not found")
+        raise FileNotFoundError(f"{filename} not in same directory as solution.py")
+    return data.strip() # remove leading/trailing whitespace
+
+
+def parse_data(filename:str) -> typing.List[typing.Tuple[str, str]]:
+    data = read_file(filename)
+    lines = [line.strip().split(',') for line in data.splitlines()]
     return lines
 
 
 def part1():
-    pairs = parse_file("input.txt")
+    pairs = parse_data("input.txt")
 
     count = 0
     for pair in pairs:
@@ -39,7 +51,7 @@ def part1():
 
 
 def part2():
-    pairs = parse_file("input.txt")
+    pairs = parse_data("input.txt")
 
     count = 0
     for pair in pairs:
