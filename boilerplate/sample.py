@@ -23,10 +23,12 @@ def parse_data(filename:str) -> typing.List[str]:
 
 
 def part1() -> int:
+    data = parse_data("test.txt")
     return 0xdeadbeef
 
 
 def part2() -> int:
+    data = parse_data("test.txt")
     return 0xdeadbeef
 
 
