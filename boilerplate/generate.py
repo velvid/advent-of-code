@@ -51,8 +51,8 @@ def create_subfolders(year, days_start, days_end, verbose):
         write_file(test_file_path, "sample input text") # protected by try/except
 
         # copy sample_boilerplate.py to folder
-        header = f"# programming challenge from https://adventofcode.com/{year}/day/{day}\n"
         boilerplate_file_path = os.path.join(day_path, "solution.py")
+        header = f"# programming challenge from https://adventofcode.com/{year}/day/{day}\n"
         write_file(boilerplate_file_path, header + boilerplate) # protected by try/except
 
         if verbose:
