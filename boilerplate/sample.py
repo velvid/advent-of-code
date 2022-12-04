@@ -15,8 +15,7 @@ def read_file(filename:str) -> str:
     return data.strip() # remove leading/trailing whitespace
 
 
-# TODO appropriately change return type
-def parse_data(filename:str) -> typing.List[str]:
+def parse_data(filename:str) -> typing.List[str]: # TODO appropriately change return type
     data = read_file(filename)
     lines = [line.strip() for line in data.splitlines()]
     return lines
@@ -24,12 +23,12 @@ def parse_data(filename:str) -> typing.List[str]:
 
 def part1() -> int:
     data = parse_data("test.txt")
-    return 0xdeadbeef
+    return data # TODO: this isn't an int, it's a list of strings
 
 
 def part2() -> int:
     data = parse_data("test.txt")
-    return 0xdeadbeef
+    return data # TODO: this isn't an int, it's a list of strings
 
 
 if __name__ == '__main__':
