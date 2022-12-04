@@ -29,7 +29,7 @@ def create_subfolders(year, days_start, days_end, verbose):
 
     # read and store boilerplate code
     # sample_boilerplate.py should be in the same folder as this file
-    sample_boilerplate_file_path = os.path.join(dir_path, "sample_boilerplate.py")
+    sample_boilerplate_file_path = os.path.join(dir_path, "sample.py")
     boilerplate = read_file(sample_boilerplate_file_path)
 
     # go up one level to create subfolders
