@@ -54,7 +54,6 @@ def part1() -> int:
     return max_seat_id
 
 
-
 def part2() -> int:
     lines = parse_data("input.txt")
 
