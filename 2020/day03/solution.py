@@ -16,7 +16,6 @@ def read_file(filename:str) -> str:
     return data.strip() # remove leading/trailing whitespace
 
 
-# TODO appropriately change return type
 def parse_data(filename:str) -> typing.List[str]:
     data = read_file(filename)
     lines = [line.strip() for line in data.splitlines()]
