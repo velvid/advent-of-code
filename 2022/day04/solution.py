@@ -22,7 +22,7 @@ def parse_data(filename:str) -> typing.List[typing.Tuple[str, str]]:
     return lines
 
 
-def part1():
+def part1() -> int:
     pairs = parse_data("input.txt")
 
     count = 0
@@ -50,7 +50,7 @@ def part1():
     return count
 
 
-def part2():
+def part2() -> int:
     pairs = parse_data("input.txt")
 
     count = 0

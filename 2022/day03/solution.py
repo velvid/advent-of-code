@@ -22,7 +22,7 @@ def parse_data(filename:str) -> typing.List[str]:
     return lines
 
 
-def part1():
+def part1() -> int:
     rucksacks = parse_data("input.txt")
 
     sum = 0
@@ -47,7 +47,7 @@ def part1():
     return sum
 
 
-def part2():
+def part2() -> int:
     rucksacks = parse_data("input.txt")
 
     sum = 0

@@ -31,7 +31,7 @@ def parse_data(filename:str) -> typing.List[str]:
     return elf_sequence, your_sequence
 
 
-def part1():
+def part1() -> int:
     elf_sequence, your_sequence = parse_data("input.txt")
 
     score_table = [1, 2, 3] # indices indicate score for rock, paper, scissors
@@ -55,7 +55,7 @@ def part1():
     return total_score
 
 
-def part2():
+def part2() -> int:
     elf_sequence, your_sequence = parse_data("input.txt")
 
     score_table = [1, 2, 3] # indices indicate score for rock, paper, scissors
