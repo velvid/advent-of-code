@@ -32,13 +32,15 @@ def part1():
         compartment1 = rucksack[:(len(rucksack) // 2)]
         compartment2 = rucksack[(len(rucksack) // 2):]
 
-        common = set(compartment1).intersection(set(compartment2))
-        common = list(common)[0]
+        common = set(compartment1) & set(compartment2) # intersection
+        common = list(common)[0] # extract element from set
 
-        if ord(common) >= ord("a") and ord(common) <= ord("z"):
+        if ord("a") <= ord(common) <= ord("z"):
             priority = ord(common) - ord("a") + 1
-        elif ord(common) >= ord("A") and ord(common) <= ord("Z"):
+        elif ord("A") <= ord(common) <= ord("Z"):
             priority = ord(common) - ord("A") + 27
+        else:
+            raise ValueError(f"invalid character {common}")
 
         sum += priority
 
@@ -50,16 +52,18 @@ def part2():
 
     sum = 0
 
-    for i in range(0, len(rucksacks), 3):
+    # iterate over groups of 3 rucksacks
+    for group in [rucksacks[i:i+3] for i in range(0, len(rucksacks), 3)]:
 
-        group = rucksacks[i : i+3]
-        common = set(group[0]).intersection(set(group[1])).intersection(set(group[2]))
+        common = set(group[0]) & set(group[1]) & set(group[2]) # intersection
         common = list(common)[0] # extract element from set
 
-        if ord(common) >= ord("a") and ord(common) <= ord("z"):
+        if ord("a") <= ord(common) <= ord("z"):
             priority = ord(common) - ord("a") + 1
-        elif ord(common) >= ord("A") and ord(common) <= ord("Z"):
+        elif ord("A") <= ord(common) <= ord("Z"):
             priority = ord(common) - ord("A") + 27
+        else:
+            raise ValueError(f"invalid character {common}")
 
         sum += priority
 
