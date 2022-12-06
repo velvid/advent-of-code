@@ -72,7 +72,14 @@ def create_subfolders(verbose, dry_run, year, days_start, days_end):
 
 if __name__ == '__main__':
     # create argument parser
-    parser = argparse.ArgumentParser(add_help=False)
+    parser = argparse.ArgumentParser(
+        add_help=False,
+        description='Generates subfolders for Advent of Code days, and '
+                    'will create a sample test.txt file and a boilerplate solution.py file.'
+                    'Can be run from any directory, but will create subfolders '
+                    'in the parent directory of the directory containing this file.'
+                    'If a subfolder already exists, it will be skipped.'
+    )
 
     # change the default help argument
     parser.add_argument('--help', '-h', action='help', default=argparse.SUPPRESS,
