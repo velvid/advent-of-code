@@ -23,7 +23,10 @@ def write_file(file_path, data):
 
 
 # function to create directory
-def create_subfolders(year, days_start, days_end, verbose):
+def create_subfolders(verbose, dry_run, year, days_start, days_end):
+    if dry_run:
+        print("Dry run, no files will be created.")
+
     # path of this file
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -44,16 +47,24 @@ def create_subfolders(year, days_start, days_end, verbose):
             if verbose:
                 print(f"{day_path} already exists, skipping")
             continue
-        os.makedirs(day_path)
+
+        if not dry_run:
+            os.makedirs(day_path)
 
         # create sample test input file in folder
         test_file_path = os.path.join(day_path, "test.txt")
-        write_file(test_file_path, "sample input text") # protected by try/except
+
+        # protected by try/except
+        if not dry_run:
+            write_file(test_file_path, "sample input text")
 
         # copy sample_boilerplate.py to folder
         boilerplate_file_path = os.path.join(day_path, "solution.py")
         header = f"# programming challenge from https://adventofcode.com/{year}/day/{day}\n"
-        write_file(boilerplate_file_path, header + boilerplate) # protected by try/except
+
+        # protected by try/except
+        if not dry_run:
+            write_file(boilerplate_file_path, header + boilerplate)
 
         if verbose:
             print(f"Wrote files in {day_path}")
@@ -64,17 +75,34 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     # current year as subfolder
-    current_year = datetime.datetime.now().year
-    parser.add_argument("--year", "-y", type=int, default=current_year, \
-        help="Year of challenge. Default is current year on your system.")
+    parser.add_argument("--year", "-y", type=int, default=datetime.datetime.now().year,
+                        help="Year of challenge. Default is current year on your system.")
+
+    day_parser = parser.add_mutually_exclusive_group()
+
+    # if only one argument is given, assume it's the current day
+    day_parser.add_argument("--day", "-d", type=int, default=datetime.datetime.now().day,
+                            help="Single day to create subfolder for. Default is current day on your system.")
 
     # get range of days, 2 arguments for start and end
-    parser.add_argument("--days", "-d", type=int, nargs=2, default=[1,25], \
-        help="Range of days, specifiying start and beginning. Default is 1 to 25.")
+    day_parser.add_argument("--days", "-D", type=int, nargs=2,
+                            help="Range of days, specifiying start and end. If not specified, only one day (current day) is created.")
 
-    # set verbosity level
-    parser.add_argument("--verbose", "-v", action="store_true", \
-        help="Print more information.")
+    # set verbosity
+    parser.add_argument("--verbose", "-v", action="store_true",
+                        help="Print more information.")
+
+    # dry run
+    parser.add_argument("--dry-run", "-n", action="store_true",
+                        help="Don't actually create any files.")
 
     args = parser.parse_args()
-    create_subfolders(args.year, args.days[0], args.days[1], args.verbose)
+
+    if args.verbose:
+        print("args:", args)
+
+    if args.days is None:
+        args.days = [args.day, args.day]
+
+    create_subfolders(args.verbose, args.dry_run,
+                      args.year, args.days[0], args.days[1])
