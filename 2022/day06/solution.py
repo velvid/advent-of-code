@@ -2,7 +2,6 @@
 
 
 import os
-from typing import List, Tuple
 
 
 def read_file(filename: str) -> str:
