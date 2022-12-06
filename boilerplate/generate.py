@@ -102,9 +102,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if args.help:
-        exit(0)
-
     if args.verbose:
         print("args:", args)
 
