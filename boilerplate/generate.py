@@ -72,7 +72,11 @@ def create_subfolders(verbose, dry_run, year, days_start, days_end):
 
 if __name__ == '__main__':
     # create argument parser
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(add_help=False)
+
+    # change the default help argument
+    parser.add_argument('--help', '-h', action='help', default=argparse.SUPPRESS,
+                        help='Show this help message and exit.')
 
     # current year as subfolder
     parser.add_argument("--year", "-y", type=int, default=datetime.datetime.now().year,
@@ -97,6 +101,9 @@ if __name__ == '__main__':
                         help="Don't actually create any files.")
 
     args = parser.parse_args()
+
+    if args.help:
+        exit(0)
 
     if args.verbose:
         print("args:", args)
