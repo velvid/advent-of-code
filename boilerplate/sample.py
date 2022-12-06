@@ -1,7 +1,7 @@
 
 
 import os
-import typing
+from typing import List, Tuple
 
 
 def read_file(filename:str) -> str:
@@ -15,7 +15,7 @@ def read_file(filename:str) -> str:
     return data.strip() # remove leading/trailing whitespace
 
 
-def parse_data(filename:str) -> typing.List[str]: # TODO appropriately change return type
+def parse_data(filename:str) -> List[str]: # TODO appropriately change return type
     data = read_file(filename)
     lines = [line.strip() for line in data.splitlines()]
     return lines
