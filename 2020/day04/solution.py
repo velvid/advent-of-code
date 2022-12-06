@@ -21,7 +21,7 @@ def parse_data(filename:str) -> typing.List[typing.List[str]]:
     return [entry.split() for entry in data.split("\n\n")]
 
 
-required_fields = set("byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid")
+required_fields = frozenset(["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"])
 match_criteria = { # dictionary of lambda functions
     "byr": lambda x: (1920 <= int(x) <= 2002),
     "iyr": lambda x: 2010 <= int(x) <= 2020,
