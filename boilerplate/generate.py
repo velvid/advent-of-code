@@ -28,38 +28,38 @@ def create_subfolders(verbose, dry_run, year, days_start, days_end):
         print("Dry run, no files will be created.")
 
     # path of this file
-    dir_path = os.path.dirname(os.path.realpath(__file__))
+    dir = os.path.dirname(os.path.realpath(__file__))
 
     # read and store boilerplate code
     # sample_boilerplate.py should be in the same folder as this file
-    sample_boilerplate_file_path = os.path.join(dir_path, "sample.py")
+    sample_boilerplate_file_path = os.path.join(dir, "sample.py")
     boilerplate = read_file(sample_boilerplate_file_path)
 
     # go up one level to create subfolders
-    dir_path = os.path.dirname(dir_path)
+    dir = os.path.dirname(dir)
 
     # create dayX folder for specified range of days
     for day in range(days_start, days_end+1):
 
         # skip subfolders with existing days, otherwise create subfolder
-        day_path = os.path.join(dir_path, f"{year}", f"day{day:02d}")
-        if os.path.exists(day_path):
+        subdir = os.path.join(dir, f"{year}", f"day{day:02d}")
+        if os.path.exists(subdir):
             if verbose:
-                print(f"{day_path} already exists, skipping")
+                print(f"{subdir} already exists, skipping")
             continue
 
         if not dry_run:
-            os.makedirs(day_path)
+            os.makedirs(subdir)
 
         # create sample test input file in folder
-        test_file_path = os.path.join(day_path, "test.txt")
+        test_file_path = os.path.join(subdir, "test.txt")
 
         # protected by try/except
         if not dry_run:
             write_file(test_file_path, "sample input text")
 
         # copy sample_boilerplate.py to folder
-        boilerplate_file_path = os.path.join(day_path, "solution.py")
+        boilerplate_file_path = os.path.join(subdir, "solution.py")
         header = f"# programming challenge from https://adventofcode.com/{year}/day/{day}\n"
 
         # protected by try/except
@@ -67,7 +67,7 @@ def create_subfolders(verbose, dry_run, year, days_start, days_end):
             write_file(boilerplate_file_path, header + boilerplate)
 
         if verbose:
-            print(f"Wrote files in {day_path}")
+            print(f"Wrote files in {subdir}")
 
 
 if __name__ == '__main__':
