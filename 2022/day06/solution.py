@@ -21,36 +21,20 @@ def parse_data(filename: str) -> str:
     return data.strip()
 
 
-def part1() -> int:
+def find_unique_substring(data: str, window_size: int) -> int:
     data = parse_data("input.txt")
+    for i in range(len(data) - window_size):
+        window = data[i:i+window_size]
+        if len(set(window)) == window_size:
+            return i + window_size
 
-    window_size = 4
-    window = set()
 
-    for i in range(len(data)):
-        window.add(data[i])
-        if len(window) == window_size:
-            return i + 1
-        if i >= len(data) - window_size:
-            return -1
-
-    return -1  # failure
+def part1() -> int:
+    return find_unique_substring(parse_data("input.txt"), 4)
 
 
 def part2() -> int:
-    data = parse_data("input.txt")
-
-    window_size = 14
-    window = set()
-
-    for i in range(len(data)):
-        window.add(data[i])
-        if len(window) == window_size:
-            return i + 1
-        if i >= len(data) - window_size:
-            return -1
-
-    return -1  # failure
+    return find_unique_substring(parse_data("input.txt"), 14)
 
 
 if __name__ == '__main__':
