@@ -2,7 +2,7 @@
 
 ## About
 
-This is my collection of solutions for the series of challenges from [Advent of Code](https://adventofcode.com/), an Advent calendar of small programming puzzles. I used Python for most of my solutions.
+This is my collection of solutions for [Advent of Code](https://adventofcode.com/), an Advent calendar of small programming puzzles. I used `Python 3.10.x` for most of my solutions.
 
 ## Project Structure
 
