@@ -23,7 +23,7 @@ def parse_data(filename: str) -> list[list[int]]:
     return grid
 
 
-def part1(grid:list[list[int]]) -> int:
+def part1(grid: list[list[int]]) -> int:
     row_size = len(grid[0])
     col_size = len(grid)
 
@@ -36,7 +36,7 @@ def part1(grid:list[list[int]]) -> int:
             # highest value in each direction
             highest = [0, 0, 0, 0]
             # column by column from left to right along row
-            highest[0] = grid[row][0]
+            highest[0] = grid[row][0]  # initialise to edge
             for i in range(1, col):
                 if grid[row][i] > highest[0]:
                     highest[0] = grid[row][i]
@@ -56,6 +56,7 @@ def part1(grid:list[list[int]]) -> int:
                 if grid[i][col] > highest[3]:
                     highest[3] = grid[i][col]
             # if current cell is visible from AT LEAST ONE direction
+            # i.e. if it's greater than the highest value in at least one direction
             if grid[row][col] > min(highest):
                 visible_count += 1
                 continue
@@ -63,30 +64,32 @@ def part1(grid:list[list[int]]) -> int:
     return visible_count
 
 
-def part2(grid:list[list[int]]) -> int:
+def part2(grid: list[list[int]]) -> int:
     row_size = len(grid[0])
     col_size = len(grid)
 
     highest_score = 0
 
-    # iterate over each cell, ignoring perimeter (perimeter is always 0)
+    # iterate over each cell, ignoring perimeter
+    # since perimeter will always yield score of 0
     for row in range(1, row_size-1):
         for col in range(1, col_size-1):
-            scores = [0, 0, 0, 0] # left, right, up, down
+            # score in each direction (up, down, left, right)
+            scores = [0, 0, 0, 0]
             # scan from current cell to top
             for i in range(row-1, -1, -1):
                 scores[0] += 1
                 if grid[row][col] <= grid[i][col]:
                     break
-            # scan from current cell to left
-            for i in range(col-1, -1, -1):
-                scores[1] += 1
-                if grid[row][col] <= grid[row][i]:
-                    break
             # scan from current cell to bottom
             for i in range(row+1, col_size):
-                scores[2] += 1
+                scores[1] += 1
                 if grid[row][col] <= grid[i][col]:
+                    break
+            # scan from current cell to left
+            for i in range(col-1, -1, -1):
+                scores[2] += 1
+                if grid[row][col] <= grid[row][i]:
                     break
             # scan from current cell to right
             for i in range(col+1, row_size):
