@@ -39,7 +39,7 @@ def parse_file(filename: str) -> file_tree_t:
                 if wd not in file_tree:  # check to not overwrite
                     file_tree[wd] = dict()
         elif line.startswith("$ ls"):
-            continue # only does ls on working directory
+            continue  # only does ls on working directory
         elif line.startswith("dir"):
             continue
         else:
@@ -92,7 +92,7 @@ def part2() -> int:
     available_size = disk_size - currently_used
     need_to_free = required_size - available_size
 
-    # initialize
+    # initialize to root folder, then find smallert folder
     dir_to_del = "/"
     size_freed = folder_sizes["/"]
 
