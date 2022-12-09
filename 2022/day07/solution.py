@@ -32,9 +32,14 @@ def parse_file(filename: str) -> file_tree_t:
             dir = line.split()[-1]
             if dir == "/":
                 wd = "/"
+            elif dir == ".." and "/" not in wd[1:]:
+                # to handle "/a" -> "/" (see next elif)
+                wd = "/"
             elif dir == "..":
-                wd = wd[:wd.rfind("/")]  # "/a/b/c" -> "/a/b" -> "/a" -> ""
+                # "/a/b/c" -> "/a/b" -> "/a" -> ""
+                wd = wd[:wd.rfind("/")]
             else:
+                # append to wd and create file dict
                 wd += ("/" + dir) if (wd != "/") else dir
                 if wd not in file_tree:  # check to not overwrite
                     file_tree[wd] = dict()
@@ -58,15 +63,15 @@ def print_file_tree(file_tree: file_tree_t):
 
 def get_folder_sizes(file_tree: file_tree_t) -> dict[str, int]:
     folder_sizes = dict()
-    folder_sizes["/"] = 0  # empty root folder
+    folder_sizes["/"] = 0  # initially, assume empty root folder
 
-    for dir in file_tree:
+    for dir, files in file_tree.items():
         is_root = (dir == "/")
-        size = sum(file_tree[dir].values())
+        size = sum(files.values())
         while dir != "":
             # add size to all parent folders
             folder_sizes[dir] = folder_sizes.get(dir, 0) + size
-            dir = dir[:dir.rfind("/")]
+            dir = dir[:dir.rfind("/")]  # skips "/", i.e. "/a" -> ""
         # add size to root folder, since missed in loop
         if not is_root:
             folder_sizes["/"] += size
@@ -74,39 +79,37 @@ def get_folder_sizes(file_tree: file_tree_t) -> dict[str, int]:
     return folder_sizes
 
 
-def part1() -> int:
-    file_tree = parse_file("input.txt")
-    folder_sizes = get_folder_sizes(file_tree)
+def part1(folder_sizes: dict[str, int]) -> int:
     # sum of all folder sizes less than 100,000
     return sum(size for size in folder_sizes.values() if size <= 100_000)
 
 
-def part2() -> int:
-    file_tree = parse_file("input.txt")
-    folder_sizes = get_folder_sizes(file_tree)
+def part2(folder_sizes: dict[str, int]) -> int:
+    disk_space = 70_000_000
+    required_space = 30_000_000
 
-    disk_size = 70_000_000
-    required_size = 30_000_000
+    available_space = disk_space - folder_sizes["/"]
+    need_to_free = required_space - available_space
 
-    currently_used = folder_sizes["/"]
-    available_size = disk_size - currently_used
-    need_to_free = required_size - available_size
+    if need_to_free <= 0:
+        return 0
 
-    # initialize to root folder, then find smallert folder
+    # initialize to root folder, then find smaller folder
     dir_to_del = "/"
-    size_freed = folder_sizes["/"]
+    space_freed = folder_sizes["/"]
 
     # find the smallest folder that can be deleted to free up enough space
     for dir in folder_sizes:
-        if need_to_free < folder_sizes[dir] < size_freed:
+        if need_to_free < folder_sizes[dir] < space_freed:
             dir_to_del = dir
-            size_freed = folder_sizes[dir]
+            space_freed = folder_sizes[dir]
 
-    print(f"delete {dir_to_del} to free {size_freed}")
-
-    return size_freed
+    # print(f"delete {dir_to_del} to free {space_freed}")
+    return space_freed
 
 
 if __name__ == "__main__":
-    print(f"Part 1: {part1()}")
-    print(f"Part 2: {part2()}")
+    file_tree = parse_file("input.txt")
+    folder_sizes = get_folder_sizes(file_tree)
+    print(f"Part 1: {part1(folder_sizes)}")
+    print(f"Part 2: {part2(folder_sizes)}")
