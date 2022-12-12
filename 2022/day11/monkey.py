@@ -94,7 +94,7 @@ class GangOfMonkeys:
 
     gang: dict[int, Monkey]
 
-    def __init__(self, gang: dict[int, Monkey]) -> None:
+    def __init__(self, gang: dict[int, Monkey] = dict()) -> None:
         self.gang = gang
 
     def __str__(self) -> str:
