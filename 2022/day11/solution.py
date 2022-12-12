@@ -7,9 +7,9 @@ import math
 import argparse
 
 from copy import deepcopy
-from typing import Callable
 from monkey import Monkey
 from monkey import GangOfMonkeys
+from monkey import Operation
 
 
 def read_file(filename: str) -> str:
@@ -42,28 +42,25 @@ def parse_data(filename: str) -> GangOfMonkeys:
         fields = [field.strip() for field in monkey.split("\n")]
 
         index = int(regex[0].match(fields[0]).group(1))
-        items = [int(item)
-                 for item in regex[1].match(fields[1]).group(1).split(", ")]
-        op_eval = regex[2].match(fields[2]).group(1)  # .replace("old", "x")
+        items = [int(item) for item in regex[1].match(fields[1]).group(1).split(", ")]
+        operation = Operation(regex[2].match(fields[2]).group(1))
         divisor = int(regex[3].match(fields[3]).group(1))
         catcher_if_true = int(regex[4].match(fields[4]).group(1))
         catcher_if_false = int(regex[5].match(fields[5]).group(1))
 
-        monkey = Monkey(index, items, op_eval, divisor,
+        monkey = Monkey(index, items, operation, divisor,
                         catcher_if_true, catcher_if_false)
         gang.add(monkey)
 
-    # print(gang)
     return gang
 
 
 def part1(gang: GangOfMonkeys, verbose: bool) -> None:
-
     for round in range(20):
         for monkey in iter(gang):
             while monkey.items != []:
                 worry_level = monkey.tosses_item()
-                new_level = monkey.causes_anxiety(worry_level) // 3
+                new_level = monkey.creates_worry(worry_level) // 3
                 if monkey.checks_item(new_level):
                     catcher = gang[monkey.catcher_if_true]
                 else:
@@ -80,14 +77,13 @@ def part1(gang: GangOfMonkeys, verbose: bool) -> None:
             print()
 
     # get top 2 monkeys with inspection count
-    top2 = sorted(gang, key=(
-        lambda monkey: monkey.inspect_count), reverse=True)[:2]
+    top2 = sorted(gang, key=(lambda monkey: monkey.inspect_count),
+                  reverse=True)[:2]
     monkey_business = top2[0].inspect_count * top2[1].inspect_count
     print(f"part 1: {monkey_business}")
 
 
 def part2(gang: GangOfMonkeys, verbose: bool) -> None:
-
     divisors = [monkey.divisor for monkey in iter(gang)]
     lcm = math.lcm(*divisors)
 
@@ -95,7 +91,7 @@ def part2(gang: GangOfMonkeys, verbose: bool) -> None:
         for monkey in iter(gang):
             while monkey.items != []:
                 worry_level = monkey.tosses_item()
-                new_level = monkey.causes_anxiety(worry_level) % lcm
+                new_level = monkey.creates_worry(worry_level) % lcm
                 if monkey.checks_item(new_level):
                     catcher = gang[monkey.catcher_if_true]
                 else:
@@ -112,22 +108,26 @@ def part2(gang: GangOfMonkeys, verbose: bool) -> None:
             print()
 
     # get top 2 monkeys with inspection count
-    top2 = sorted(gang, key=(
-        lambda monkey: monkey.inspect_count), reverse=True)[:2]
+    top2 = sorted(gang, key=(lambda monkey: monkey.inspect_count),
+                  reverse=True)[:2]
     monkey_business = top2[0].inspect_count * top2[1].inspect_count
     print(f"Part 2: {monkey_business}")
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("file", type=str, default="test.txt", nargs="?")
+    parser.add_argument("filename", type=str, default="test.txt", nargs="?")
+    parser.add_argument("-p", "--part", type=int, default=0, nargs="?", choices=[0, 1, 2])
     parser.add_argument("-v", "--verbose", action="store_true")
-    parser.add_argument("-p", "--part", type=int,
-                        choices=[1, 2, 12, 21], default=12)
     args = parser.parse_args()
 
-    data = parse_data(args.file)
-    if args.part in [1, 12, 21]:
-        part1(deepcopy(data), args.verbose)
-    if args.part in [2, 12, 21]:
+    data = parse_data(args.filename)
+    if args.verbose:
+        print(data)
+
+    if args.part == 1 or args.part == 0:
+        d = deepcopy(data) if args.part == 0 else data
+        part1(d, args.verbose)
+
+    if args.part == 2 or args.part == 0:
         part2(data, args.verbose)
