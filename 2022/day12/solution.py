@@ -93,6 +93,9 @@ if __name__ == '__main__':
     text = read_file(args.filename)
     data = Heightmap(text)
 
+    if args.verbose:
+        print(data)
+
     if args.part == 1 or args.part == 0:
         print("part 1:", part1(data, args.verbose))
     if args.part == 2 or args.part == 0:

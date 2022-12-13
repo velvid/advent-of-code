@@ -1,3 +1,8 @@
+from color_gradient import fg_gradient
+from color_gradient import bg_gradient
+from color_gradient import fg_bg_gradient
+
+
 class Heightmap:
     node_t = tuple[int, int]
     map_t = list[list[str]]
@@ -27,7 +32,15 @@ class Heightmap:
             raise ValueError("No end node found")
 
     def __repr__(self) -> str:
-        return "\n".join(["".join(line) for line in self.heightmap])
+        # use ANSI escape codes to color the heightmap
+        buffer = ""
+        for i in range(self.length):
+            for j in range(self.width):
+                node = self.heightmap[i][j]
+                color = bg_gradient(node)
+                buffer += color + node + "\x1b[0m"
+            buffer += "\n"
+        return buffer
 
     def is_in_bounds(self, node: node_t) -> bool:
         return 0 <= node[0] < self.length and \
@@ -45,31 +58,32 @@ class Heightmap:
             (node[0] - 1, node[1]),  # up
             (node[0] + 1, node[1]),  # down
             (node[0], node[1] - 1),  # left
-            (node[0], node[1] + 1)   # right
-        ]
+            (node[0], node[1] + 1)]  # right
         nodes = [
             next for next in indices if
             self.is_in_bounds(next) and
-            not self.too_high(node, next)
-        ]
+            not self.too_high(node, next)]
         return nodes
 
     def print_path(self, path: list[node_t]) -> None:
-        str_buffer = [["." for _ in range(self.width)] for _ in range(self.length)]
+        buffer = [[" " for _ in range(self.width)] for _ in range(self.length)]
+        for i in range(self.length):
+            for j in range(self.width):
+                node = self.heightmap[i][j]
+                color = bg_gradient(node)
+                buffer[i][j] = color + "." + "\x1b[0m"
 
         for i in range(len(path) - 1):
-            node = path[i]
-            next = path[i + 1]
+            node, next = path[i], path[i + 1]
             if   node[0] - next[0] ==  1: arrow = "^"
             elif node[0] - next[0] == -1: arrow = "v"
             elif node[1] - next[1] ==  1: arrow = "<"
             elif node[1] - next[1] == -1: arrow = ">"
             else:
-                print(f"ERROR: {node} -> {next} is not a valid path, not printing")
-                return
-            str_buffer[node[0]][node[1]] = arrow
+                print(f"ERROR: {node} -> {next} is not a valid path")
+                arrow = "?"
+            char = self.heightmap[node[0]][node[1]]
+            buffer[node[0]][node[1]] = \
+                fg_bg_gradient(char) + arrow + "\x1b[0m"
 
-        end_i, end_j = self.end
-        str_buffer[end_i][end_j] = "X"  # X marks the spot!
-
-        print("\n".join(["".join(line) for line in str_buffer]))
+        print("\n".join(["".join(line) for line in buffer]))
